@@ -1,8 +1,13 @@
 <template>
   <div id="form">
     <course-form @add:course="addCourse" />
-    <course-table :courses="courses"/>
+
+    <div id="table">
+    <course-table :courses="courses"
+    @delete:course="deleteCourse"/>
   </div>
+  </div>
+
 </template>
 
 <script>
@@ -17,7 +22,13 @@ export default {
   },
   data() {
     return {
-      courses: []
+      courses: [
+          {id: 1,
+          name: "math",
+          date: "29-11-2021",
+          taskName: "Weekly task 5",
+          taskInfo: "Complete exercises 1-5"},
+      ]
     }
   },
   methods: {
@@ -28,7 +39,13 @@ export default {
       const id = lastId + 1;
       const newCourse = {...course, id};
       this.courses = [...this.courses, newCourse]
+    },
+
+    deleteCourse(id) {
+      this.courses = this.courses.filter(course => course.id !== id)
     }
+
+
   }
 }
 </script>
@@ -42,4 +59,15 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+#table {
+  margin-top: -468px;
+  float: right;
+}
+
+div {
+  margin: 50px;
+}
+
+
 </style>
