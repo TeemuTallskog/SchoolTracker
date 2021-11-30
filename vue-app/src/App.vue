@@ -1,10 +1,14 @@
 <template>
   <div id="form">
     <course-form @add:course="addCourse" />
+    <task-form @add:task="addTask" />
 
     <div id="table">
-    <course-table :courses="courses"
-    @delete:course="deleteCourse"/>
+    <course-table :courses="courses" :tasks="courses.tasks"
+    @delete:course="deleteCourse"
+    @delete:task="deleteTask"
+
+    />
   </div>
   </div>
 
@@ -13,21 +17,38 @@
 <script>
 import CourseForm from "./components/CourseForm.vue";
 import CourseTable from "./components/CourseTable";
+import TaskForm from '@/components/TaskForm';
 
 export default {
   name: 'App',
   components: {
     CourseTable,
-    CourseForm
+    CourseForm,
+    TaskForm
   },
   data() {
     return {
       courses: [
           {id: 1,
-          name: "math",
-          date: "29-11-2021",
-          taskName: "Weekly task 5",
-          taskInfo: "Complete exercises 1-5"},
+          name: "Mathematics",
+          info: "Mathematics course",
+          tasks: [{id: 1,
+                  name: "Task 1",
+                  date: "2021-11-30",
+                  info: "Complete exercises 1-5"},
+
+            {id: 2,
+            name: "Task 2",
+            date: "2021-11-31",
+            info: "Complete exercises 5-10"}
+
+          ],},
+
+        {id: 2,
+        name: "Programming",
+        info: "Programming course",
+        tasks: [],},
+
       ]
     }
   },
@@ -41,9 +62,32 @@ export default {
       this.courses = [...this.courses, newCourse]
     },
 
-    deleteCourse(id) {
-      this.courses = this.courses.filter(course => course.id !== id)
+
+      deleteCourse(id) {
+        this.courses = this.courses.filter(course => course.id !== id)
+      },
+
+    /*
+   ei toimi?
+
+      deleteTask(course, id) {
+        let i = course.tasks.indexOf(id);
+        course.tasks.splice(i, 1);
+      }
+
+
+    ei toimi kunnolla
+    addTask(course, task) {
+      const lastId = this.courses.tasks.length > 0
+          ? this.courses.tasks[this.courses.tasks.length - 1].id
+          : 0;
+      const id = lastId + 1;
+      const newTask = {...task, id};
+      course.tasks = [...course.tasks, newTask]
+
     }
+    */
+
 
 
   }

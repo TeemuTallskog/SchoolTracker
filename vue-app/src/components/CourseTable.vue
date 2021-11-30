@@ -6,10 +6,14 @@
      <li>
        <p>{{ course.id }}</p>
        <h2>{{ course.name }}</h2>
-       <p>{{ course.date }}</p>
-       <p>{{ course.taskName }}</p>
-       <p>{{ course.taskInfo }}</p>
-       <button @click="$emit('delete:course', course.id)">Delete</button>
+        <ul v-for="task in course.tasks" :key="task.id">
+          <h3>{{task.name}}</h3>
+          <p>{{task.date}}</p>
+          <p>{{task.info}}</p>
+          <button @click="('delete:task', task.id)">Delete task</button>
+          <br>
+        </ul>
+       <button @click="$emit('delete:course', course.id)">Delete course</button>
      </li>
    </ul>
  </div>
@@ -20,6 +24,7 @@ export default {
   name: "course-table",
   props: {
     courses: Array,
+    tasks: Array,
   },
   methods: {
     redirectTo: function (course){
