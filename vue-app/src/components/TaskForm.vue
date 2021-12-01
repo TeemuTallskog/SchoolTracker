@@ -1,5 +1,5 @@
 <template>
-  <div id="course-form">
+  <div id="task-form">
     <form @submit.prevent="handleSubmit">
       <h1>Uusi tehtävä</h1>
 
@@ -36,8 +36,9 @@ export default {
     return{
       task: {
         name: '',
+        course: '',
         link: '',
-        date:'',
+        date: '',
         info:'',
       },
     }
@@ -61,7 +62,6 @@ div {
 input {
   width: 200px;
   margin: 10px;
-  align: bottom;
 }
 
 

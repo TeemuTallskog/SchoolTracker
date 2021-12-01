@@ -30,10 +30,7 @@ export default {
         name: '',
         link: '',
         info: '',
-        task: [ {id: '',
-                  name: '',
-                  date: '',
-                  info: '',}],
+        tasks: [],
       },
     }
   },
@@ -56,7 +53,6 @@ div {
 input {
   width: 200px;
  margin: 10px;
-  align: bottom;
 }
 
 

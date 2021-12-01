@@ -3,8 +3,9 @@
     <course-form @add:course="addCourse" />
     <task-form @add:task="addTask" />
 
+
     <div id="table">
-    <course-table :courses="courses" :tasks="courses.tasks"
+    <course-table :courses="courses"
     @delete:course="deleteCourse"
     @delete:task="deleteTask"
 
@@ -17,7 +18,7 @@
 <script>
 import CourseForm from "./components/CourseForm.vue";
 import CourseTable from "./components/CourseTable";
-import TaskForm from '@/components/TaskForm';
+import TaskForm from "./components/TaskForm.vue";
 
 export default {
   name: 'App',
@@ -32,15 +33,7 @@ export default {
           {id: 1,
           name: "Mathematics",
           info: "Mathematics course",
-          tasks: [{id: 1,
-                  name: "Task 1",
-                  date: "2021-11-30",
-                  info: "Complete exercises 1-5"},
-
-            {id: 2,
-            name: "Task 2",
-            date: "2021-11-31",
-            info: "Complete exercises 5-10"}
+          tasks: [
 
           ],},
 
@@ -49,7 +42,9 @@ export default {
         info: "Programming course",
         tasks: [],},
 
-      ]
+      ],
+
+      tasks : []
     }
   },
   methods: {
@@ -60,33 +55,51 @@ export default {
       const id = lastId + 1;
       const newCourse = {...course, id};
       this.courses = [...this.courses, newCourse]
+
+      console.log("New course made")
     },
 
+    addTask(task) {
+      //Creating new task with id
+      const lastId = this.tasks.length > 0
+          ? this.tasks[this.tasks.length - 1].id
+          : 0;
+      const id = lastId + 1;
+      const newTask = {...task, id};
+      //Array needed to keep track of IDs
+      this.tasks = [...this.tasks, newTask]
 
+      console.log("New task made")
+
+      //Finding course
+      for (let i = 0; i < this.courses.length; i++) {
+        //If course-name of newly made task is found in courses-array, push to nested tasks-array of that index
+        if (newTask.course.match(this.courses[i].name)) {
+          this.courses[i].tasks.push({date: newTask.date, name: newTask.name, link: newTask.link, course: newTask.course, info: newTask.info, id: newTask.id})
+        }
+      }
+    },
+
+    //Works
       deleteCourse(id) {
         this.courses = this.courses.filter(course => course.id !== id)
       },
 
-    /*
-   ei toimi?
 
-      deleteTask(course, id) {
-        let i = course.tasks.indexOf(id);
-        course.tasks.splice(i, 1);
+
+/*
+      //Does delete but not by id
+      deleteCourse(course) {
+        let i = this.courses.indexOf(course)
+        this.courses.splice(i, 1)
+      },
+
+      //Does nothing
+      deleteTask(course, task) {
+        let i = course.tasks.indexOf(task)
+        course.tasks.splice(i, 1)
       }
-
-
-    ei toimi kunnolla
-    addTask(course, task) {
-      const lastId = this.courses.tasks.length > 0
-          ? this.courses.tasks[this.courses.tasks.length - 1].id
-          : 0;
-      const id = lastId + 1;
-      const newTask = {...task, id};
-      course.tasks = [...course.tasks, newTask]
-
-    }
-    */
+ */
 
 
 
@@ -95,7 +108,7 @@ export default {
 </script>
 
 <style>
-#app {
+body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -105,7 +118,8 @@ export default {
 }
 
 #table {
-  margin-top: -468px;
+  margin-top: -864px;
+  margin-right: 500px;
   float: right;
 }
 
