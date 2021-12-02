@@ -1,8 +1,8 @@
 <html lang="en">
 <body>
-<form action = "http://127.0.0.1:8081/process_get" method = "GET">
-    First Name: <input type = "text" name = "first_name">  <br>
-    Last Name: <input type = "text" name = "last_name">
+<form action = "http://127.0.0.1:8081/course" method = "POST">
+    Course name: <input type = "text" name = "name" required>  <br>
+    link: <input type = "text" name = "link">
     <input type = "submit" value = "Submit">
 </form>
 <form action="http://127.0.0.1:8081/task" method="POST">
@@ -12,5 +12,7 @@
     date: <input type="date" name="date">
     <input type="submit" value="Send to database">
 </form>
+
+
 </body>
 </html>

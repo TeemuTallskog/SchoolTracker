@@ -18,6 +18,42 @@ const con = mysql.createConnection({
 
 const query = util.promisify(con.query).bind(con);
 
+app.get('/list', async function(req, res){
+    const sqlCourses = 'SELECT * FROM courses';
+    const sqlTasks = 'SELECT * FROM tasks';
+    let courses = await query(sqlCourses);
+    const tasks = await query(sqlTasks);
+
+    for(let i = 0; i < Object.keys(courses).length; i++){
+        courses[i].tasks = [];
+    }
+    for(let i = 0; i < Object.keys(tasks).length; i++){
+        courses[courses.findIndex(function(item, i){
+            return item.ID === tasks[i].course_id;
+        })].tasks.push(tasks[i]);
+    }
+    res.send(courses);
+})
+
+app.post('/course', urlencodedParser,[check('name').isLength({min:2}).withMessage("Minimum name lenght = 2")], function (req, res){
+   const errors = validationResult(req);
+   if(!errors.isEmpty()){
+       return res.status(422).json({errors:  errors.array()});
+   }
+   try{
+        const obj = req.body;
+        const sql = "INSERT INTO courses (Name, link) VALUE (?, ?)"
+        query(sql, [obj.name, obj.link], function (err, result){
+            if(err) throw err;
+            console.log(result);
+       });
+        res.send('Success');
+   }
+   catch (err){
+       console.log("Database error!" + err);
+       res.send('error');
+   }
+});
 
 app.post('/task', urlencodedParser, [check('name').isLength({min:2}).withMessage("Minimum name lenght = 2"),
     check('date').isDate().withMessage("Must have a date"), check('courseID').isInt().withMessage("Must contain course ID")],
