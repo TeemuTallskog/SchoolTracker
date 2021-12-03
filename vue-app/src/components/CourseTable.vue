@@ -11,7 +11,7 @@
           <h3>{{task.name}}</h3>
           <p>{{task.date}}</p>
           <p>{{task.info}}</p>
-          <button @click="('delete:task', task.id)">Delete task</button>
+          <button href="javascript:;" @click="deleteTask(course, task)">Delete task</button>
           <br>
         </ul>
        <button @click="$emit('delete:course', course.id)">Delete course</button>
@@ -30,6 +30,13 @@ export default {
   methods: {
     redirectTo: function (course){
       window.location.href=course.link;
+    },
+
+    deleteTask(course, task) {
+      let i = course.tasks.indexOf(task)
+      course.tasks.splice(i, 1);
+
+      console.log("Task " + i + " deleted")
     }
   }
 }

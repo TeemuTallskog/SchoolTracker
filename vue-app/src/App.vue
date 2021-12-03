@@ -7,7 +7,6 @@
     <div id="table">
     <course-table :courses="courses"
     @delete:course="deleteCourse"
-    @delete:task="deleteTask"
 
     />
   </div>
@@ -33,7 +32,9 @@ export default {
           {id: 1,
           name: "Mathematics",
           info: "Mathematics course",
-          tasks: [
+          tasks: [{id: 1,
+          name: "task",
+          date: "2021-12-09"}
 
           ],},
 
@@ -80,29 +81,11 @@ export default {
       }
     },
 
-    //Works
       deleteCourse(id) {
         this.courses = this.courses.filter(course => course.id !== id)
+
+        console.log("Course " + id + " deleted" )
       },
-
-
-
-/*
-      //Does delete but not by id
-      deleteCourse(course) {
-        let i = this.courses.indexOf(course)
-        this.courses.splice(i, 1)
-      },
-
-      //Does nothing
-      deleteTask(course, task) {
-        let i = course.tasks.indexOf(task)
-        course.tasks.splice(i, 1)
-      }
- */
-
-
-
   }
 }
 </script>
