@@ -18,6 +18,55 @@ const con = mysql.createConnection({
 
 const query = util.promisify(con.query).bind(con);
 
+app.delete('/delete/task:id', function (req, res){
+    try {
+        const id = req.query.id;
+        const sql = "DELETE FROM tasks WHERE id = ?";
+        query(sql, [id], function (err, result) {
+            if (err) throw err;
+            console.log(result);
+        });
+        res.send("Success");
+    }
+    catch(err){
+        if(err) throw err;
+        console.log(err);
+        res.send("Error");
+    }
+});
+
+app.post('/update/course', urlencodedParser, function (req, res){
+    try {
+        const obj = req.body;
+        const sql = "UPDATE courses SET Name = ?, link = ? WHERE ID = ?";
+        query(sql, [obj.Name, obj.link, obj.id], function (err, result) {
+            if (err) throw err;
+            console.log(result);
+        });
+        res.send("Success");
+    }
+    catch(err){
+        console.log("Error " + err);
+        res.send("Database error");
+    }
+});
+
+app.post('/update/task', urlencodedParser, function (req, res){
+    try {
+        const obj = req.body;
+        const sql = "UPDATE tasks SET Name = ?, info = ?, return_date = ?, course_id = ? WHERE ID = ?";
+        query(sql, [obj.Name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
+            if (err) throw err;
+            console.log(result);
+        });
+        res.send("Success");
+    }
+    catch(err){
+        console.log("Error " + err);
+        res.send("Database error");
+    }
+});
+
 app.get('/list', async function(req, res){
     const sqlCourses = 'SELECT * FROM courses';
     const sqlTasks = 'SELECT * FROM tasks';
