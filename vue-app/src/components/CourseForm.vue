@@ -1,7 +1,7 @@
 <template>
 <div id="course-form">
   <form @submit.prevent="handleSubmit">
-    <h1>Uusi tehtävä</h1>
+    <h1>Uusi Kurssi</h1>
 
     <label for="name"></label>
     <input id="name" v-model="course.name" type="text" placeholder="Kurssin nimi">
@@ -11,20 +11,11 @@
 
     <br>
 
-    <label for="date"></label>
-    <input id="date" v-model="course.date" type="date">
-
-
-    <label for="taskName"></label>
-    <input id ="taskName" v-model="course.taskName" type="text" placeholder="Tehtävän nimi">
+    <textarea id="taskInfo" rows="10" cols="56" v-model="course.info" type="text" placeholder="Lisätietoja kurssista"></textarea>
 
     <br>
 
-    <textarea id="taskInfo" rows="10" cols="56" v-model="course.taskInfo" type="text" placeholder="Lisätietoja tehtävästä"></textarea>
-
-    <br>
-
-    <button>Luo Tehtävä</button>
+    <button>Luo Kurssi</button>
 
   </form>
 </div>
@@ -38,9 +29,8 @@ export default {
       course: {
         name: '',
         link: '',
-        date:'',
-        taskName: '',
-        taskInfo:'',
+        info: '',
+        tasks: [],
       },
     }
   },
@@ -63,7 +53,6 @@ div {
 input {
   width: 200px;
  margin: 10px;
-  align: bottom;
 }
 
 
