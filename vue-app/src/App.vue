@@ -1,15 +1,11 @@
 <template>
   <div id="form">
-    <course-form @add:course="addCourse" />
-    <task-form @add:task="addTask" />
-
+    <course-form @add:course="addCourse"/>
+    <task-form @add:task="addTask"/>
 
     <div id="table">
-    <course-table :courses="courses"
-    @delete:course="deleteCourse"
-
-    />
-  </div>
+      <course-table :courses="courses" @delete:course="deleteCourse"/>
+    </div>
   </div>
 
 </template>
@@ -29,37 +25,30 @@ export default {
   data() {
     return {
       courses: [],
-      tasks : []
+      tasks: []
     }
   },
   methods: {
-    fetchData(){
+    async fetchData() {
       try {
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function (){
-          if(this.readyState == 4 && this.status == 200){
-            const data = JSON.parse(xhttp.responseText);
-            console.log(data);
-            this.courses = [...data];
-            console.log(xhttp.responseText);
-          }
-        }
-        xhttp.open("GET", 'http://127.0.0.1:8081/list', true);
-        xhttp.send();
-      }
-      catch(err){
+        const response = await fetch("http://127.0.0.1:8081/list");
+        const data = await response.json();
+        this.courses = data;
+      } catch (err) {
         console.error("Error " + err);
       }
     },
-    addCourse(course){
-      const lastId = this.courses.length > 0
-      ? this.courses[this.courses.length - 1].id
-          : 0;
-      const id = lastId + 1;
-      const newCourse = {...course, id};
-      this.courses = [...this.courses, newCourse]
-
-      console.log("New course made")
+    async addCourse(course) {
+      try{
+        await fetch('http://127.0.0.1:8081/course', {
+            method: 'POST',
+            body: JSON.stringify(course),
+            headers: {'Content-type': 'application/json; charset=UTF-8'},
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
+      }
     },
 
     addTask(task) {
@@ -78,18 +67,25 @@ export default {
       for (let i = 0; i < this.courses.length; i++) {
         //If course-name of newly made task is found in courses-array, push to nested tasks-array of that index
         if (newTask.course.match(this.courses[i].name)) {
-          this.courses[i].tasks.push({date: newTask.date, name: newTask.name, link: newTask.link, course: newTask.course, info: newTask.info, id: newTask.id})
+          this.courses[i].tasks.push({
+            date: newTask.date,
+            name: newTask.name,
+            link: newTask.link,
+            course: newTask.course,
+            info: newTask.info,
+            id: newTask.id
+          })
         }
       }
     },
 
-      deleteCourse(id) {
-        this.courses = this.courses.filter(course => course.id !== id)
+    deleteCourse(id) {
+      this.courses = this.courses.filter(course => course.id !== id)
 
-        console.log("Course " + id + " deleted" )
-      },
+      console.log("Course " + id + " deleted")
+    },
   },
-  mounted(){
+  mounted() {
     this.fetchData();
   }
 }
