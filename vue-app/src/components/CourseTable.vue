@@ -7,10 +7,10 @@
        <p>{{ course.id }}</p>
        <h2>{{ course.name }}</h2>
         <ul v-for="task in course.tasks" :key="task.id">
-          <p>{{task.id}}</p>
-          <h3>{{task.name}}</h3>
-          <p>{{task.date}}</p>
-          <p>{{task.info}}</p>
+          <p>{{course.tasks.id}}</p>
+          <h3>{{course.tasks.name}}</h3>
+          <p>{{course.tasks.date}}</p>
+          <p>{{course.tasks.info}}</p>
           <button href="javascript:;" @click="deleteTask(course, task)">Delete task</button>
           <br>
         </ul>

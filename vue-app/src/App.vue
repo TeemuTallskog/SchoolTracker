@@ -28,27 +28,29 @@ export default {
   },
   data() {
     return {
-      courses: [
-          {id: 1,
-          name: "Mathematics",
-          info: "Mathematics course",
-          tasks: [{id: 1,
-          name: "task",
-          date: "2021-12-09"}
-
-          ],},
-
-        {id: 2,
-        name: "Programming",
-        info: "Programming course",
-        tasks: [],},
-
-      ],
-
+      courses: [],
       tasks : []
     }
   },
   methods: {
+    fetchData(){
+      try {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (){
+          if(this.readyState == 4 && this.status == 200){
+            const data = JSON.parse(xhttp.responseText);
+            console.log(data);
+            this.courses = [...data];
+            console.log(xhttp.responseText);
+          }
+        }
+        xhttp.open("GET", 'http://127.0.0.1:8081/list', true);
+        xhttp.send();
+      }
+      catch(err){
+        console.error("Error " + err);
+      }
+    },
     addCourse(course){
       const lastId = this.courses.length > 0
       ? this.courses[this.courses.length - 1].id
@@ -86,6 +88,9 @@ export default {
 
         console.log("Course " + id + " deleted" )
       },
+  },
+  mounted(){
+    this.fetchData();
   }
 }
 </script>
