@@ -5,7 +5,9 @@ const util = require('util');
 const bodyParser = require('body-parser');
 const { check, validationResult } = require('express-validator');
 const urlencodedParser = bodyParser.urlencoded({extended: false});
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
@@ -13,7 +15,7 @@ const con = mysql.createConnection({
     host:'localhost',
     user:'olso',
     password:'olso',
-    database:'schooltracker'
+    database:'schooltrackertest'
 });
 
 const query = util.promisify(con.query).bind(con);
@@ -38,7 +40,7 @@ app.delete('/delete/task:id', function (req, res){
 app.post('/update/course', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
-        const sql = "UPDATE courses SET Name = ?, link = ? WHERE ID = ?";
+        const sql = "UPDATE courses SET name = ?, link = ? WHERE id = ?";
         query(sql, [obj.Name, obj.link, obj.id], function (err, result) {
             if (err) throw err;
             console.log(result);
@@ -54,7 +56,7 @@ app.post('/update/course', urlencodedParser, function (req, res){
 app.post('/update/task', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
-        const sql = "UPDATE tasks SET Name = ?, info = ?, return_date = ?, course_id = ? WHERE ID = ?";
+        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ? WHERE id = ?";
         query(sql, [obj.Name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
             if (err) throw err;
             console.log(result);
@@ -91,7 +93,7 @@ app.post('/course', urlencodedParser,[check('name').isLength({min:2}).withMessag
    }
    try{
         const obj = req.body;
-        const sql = "INSERT INTO courses (Name, link) VALUE (?, ?)"
+        const sql = "INSERT INTO courses (name, link) VALUE (?, ?)"
         query(sql, [obj.name, obj.link], function (err, result){
             if(err) throw err;
             console.log(result);
@@ -113,7 +115,7 @@ app.post('/task', urlencodedParser, [check('name').isLength({min:2}).withMessage
     }
     try {
         const obj = request.body;
-        const sql = "INSERT INTO tasks (Name, info, return_date, course_id) VALUES (? ,? ,?, ?)"
+        const sql = "INSERT INTO tasks (name, info, date, courseID) VALUES (? ,? ,?, ?)"
         query(sql,[obj.name, obj.info, obj.date, obj.courseID], function (err, result){
             if(err) throw err;
             console.log(result);
