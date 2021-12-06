@@ -4,7 +4,12 @@
     <task-form @add:task="addTask"/>
 
     <div id="table">
-      <course-table :courses="courses" @delete:course="deleteCourse"/>
+      <course-table
+          :courses="courses"
+          @delete:course="deleteCourse"
+          @edit:task="editTask"
+
+      />
     </div>
   </div>
 
@@ -25,7 +30,7 @@ export default {
   data() {
     return {
       courses: [],
-      tasks: []
+      tasks: [],
     }
   },
   methods: {
@@ -84,6 +89,11 @@ export default {
 
       console.log("Course " + id + " deleted")
     },
+
+    editTask(id, updatedTask) {
+      this.courses.tasks = this.courses.tasks.map (task => task.id === id ? updatedTask : task)
+    }
+
   },
   mounted() {
     this.fetchData();
