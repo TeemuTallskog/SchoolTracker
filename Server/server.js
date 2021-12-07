@@ -20,11 +20,16 @@ const con = mysql.createConnection({
 
 const query = util.promisify(con.query).bind(con);
 
-app.delete('/delete/task:id', function (req, res){
+
+/**
+ * Used to delete a course from the database by adding a parameter /delete/course?id=X
+ */
+app.delete('/delete/course', function (req, res){
     try {
         const id = req.query.id;
-        const sql = "DELETE FROM tasks WHERE id = ?";
-        query(sql, [id], function (err, result) {
+        console.log(id);
+        const sql = "DELETE FROM courses WHERE id = ?";
+        query(sql,[id], function (err, result) {
             if (err) throw err;
             console.log(result);
         });
@@ -37,6 +42,30 @@ app.delete('/delete/task:id', function (req, res){
     }
 });
 
+/**
+ * Used to delete a task from the database by adding a parameter /delete/task?id=X
+ */
+app.delete('/delete/task', function (req, res){
+    try {
+        const id = req.query.id;
+        console.log(id);
+        const sql = "DELETE FROM tasks WHERE id = ?";
+        query(sql,[id], function (err, result) {
+            if (err) throw err;
+            console.log(result);
+        });
+        res.send("Success");
+    }
+    catch(err){
+        if(err) throw err;
+        console.log(err);
+        res.send("Error");
+    }
+});
+
+/**
+ * Used to update a course by adding the modified course object to the body of the request
+ */
 app.post('/update/course', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
@@ -53,6 +82,10 @@ app.post('/update/course', urlencodedParser, function (req, res){
     }
 });
 
+
+/**
+ * Used to update a task by adding the modified task to the body of the request
+ */
 app.post('/update/task', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
@@ -69,6 +102,9 @@ app.post('/update/task', urlencodedParser, function (req, res){
     }
 });
 
+/**
+ * Returns all the courses and tasks from the database as a single JSON string
+ */
 app.get('/list', async function(req, res){
     const sqlCourses = 'SELECT * FROM courses';
     const sqlTasks = 'SELECT * FROM tasks';
@@ -86,6 +122,9 @@ app.get('/list', async function(req, res){
     res.send(courses);
 })
 
+/**
+ * Used to add a new course to the database by adding the course object to the body of the request
+ */
 app.post('/course', urlencodedParser,[check('name').isLength({min:2}).withMessage("Minimum name lenght = 2")], function (req, res){
    const errors = validationResult(req);
    if(!errors.isEmpty()){
@@ -106,6 +145,9 @@ app.post('/course', urlencodedParser,[check('name').isLength({min:2}).withMessag
    }
 });
 
+/**
+ * Used to add a task to the database by adding the task object to the body of the request
+ */
 app.post('/task', urlencodedParser, [check('name').isLength({min:2}).withMessage("Minimum name lenght = 2"),
     check('date').isDate().withMessage("Must have a date"), check('courseID').isInt().withMessage("Must contain course ID")],
     function (request, res) {
@@ -139,4 +181,3 @@ const server = app.listen(8081, function () {
 
     console.log("Example app listening at http://%s:%s", host, port);
 })
-
