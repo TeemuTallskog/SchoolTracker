@@ -12,7 +12,7 @@
     </div>
 
       <div v-if="!taskIsHidden" id="task-form">
-    <task-form @add:task="addTask"/>
+    <task-form @add:task="addTask" :courses="courses"/>
 
     </div>
   </div>
@@ -21,7 +21,8 @@
       <course-table
           :courses="courses"
           @delete:course="deleteCourse"
-          @edit:task="editTask"/>
+          @edit:task="editTask"
+          @delete:task="deleteTask"/>
 
       </div>
 
@@ -60,6 +61,17 @@ export default {
         console.error("Error " + err);
       }
     },
+    async deleteTask(id){
+      try{
+        await fetch('http://127.0.0.1:8081/delete/task?id=' + id, {
+          method: 'DELETE',
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
+      }
+      console.log("Task " + id + " deleted")
+    },
     async addCourse(course) {
       try{
         await fetch('http://127.0.0.1:8081/course', {
@@ -73,42 +85,44 @@ export default {
       }
     },
 
-    addTask(task) {
-      //Creating new task with id
-      const lastId = this.tasks.length > 0
-          ? this.tasks[this.tasks.length - 1].id
-          : 0;
-      const id = lastId + 1;
-      const newTask = {...task, id};
-      //Array needed to keep track of IDs
-      this.tasks = [...this.tasks, newTask]
-
-      console.log("New task made")
-
-      //Finding course
-      for (let i = 0; i < this.courses.length; i++) {
-        //If course-name of newly made task is found in courses-array, push to nested tasks-array of that index
-        if (newTask.course.match(this.courses[i].name)) {
-          this.courses[i].tasks.push({
-            date: newTask.date,
-            name: newTask.name,
-            link: newTask.link,
-            course: newTask.course,
-            info: newTask.info,
-            id: newTask.id
-          })
-        }
+    async addTask(task) {
+      console.log(JSON.stringify(task));
+      try{
+        await fetch('http://127.0.0.1:8081/task', {
+          method: 'POST',
+          body: JSON.stringify(task),
+          headers: {'Content-type': 'application/json; charset=UTF-8'},
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
       }
     },
 
-    deleteCourse(id) {
-      this.courses = this.courses.filter(course => course.id !== id)
-
+    async deleteCourse(id) {
+      try{
+        await fetch('http://127.0.0.1:8081/delete/course?id=' + id, {
+          method: 'DELETE',
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
+      }
       console.log("Course " + id + " deleted")
     },
 
-    editTask(id, updatedTask) {
-      this.courses.tasks = this.courses.tasks.map (task => task.id === id ? updatedTask : task)
+    async editTask(id, updatedTask) {
+      console.log(updatedTask)
+      try{
+        await fetch('http://127.0.0.1:8081/update/task', {
+          method: 'POST',
+          body: JSON.stringify(updatedTask),
+          headers: {'Content-type': 'application/json; charset=UTF-8'},
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
+      }
     },
 
 

@@ -6,8 +6,10 @@
       <label for="name"></label>
       <input id="name" v-model="task.name" type="text" placeholder="Tehtävän nimi">
 
-      <label for="course"></label>
-      <input id="course" v-model="task.course" type="text" placeholder="Kurssin nimi">
+      <label for="course">Valitse kurssi: </label>
+      <select v-model="task.courseID" id="course">
+        <option v-for="course in courses" :key="course.id" :value="course.id">{{course.name}}</option>
+      </select>
 
       <br>
 
@@ -32,11 +34,14 @@
 <script>
 export default {
   name: "TaskForm",
+  props: {
+    courses: Array,
+  },
   data(){
     return{
       task: {
         name: '',
-        course: '',
+        courseID: '',
         link: '',
         date: '',
         info:'',
