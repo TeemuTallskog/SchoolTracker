@@ -1,12 +1,32 @@
 <template>
-  <div id="form">
+
+
+  <div id="app">
+    <div id="form">
+
+      <button v-on:click="courseIsHidden = !courseIsHidden">Kurssi</button>
+      <button v-on:click="taskIsHidden = !taskIsHidden">Tehtävä</button>
+
+      <div v-if="!courseIsHidden && taskIsHidden" id="course-form">
     <course-form @add:course="addCourse"/>
+    </div>
+
+      <div v-if="!taskIsHidden" id="task-form">
     <task-form @add:task="addTask"/>
 
-    <div id="table">
-      <course-table :courses="courses" @delete:course="deleteCourse"/>
     </div>
   </div>
+
+    <div id="table">
+      <course-table
+          :courses="courses"
+          @delete:course="deleteCourse"
+          @edit:task="editTask"/>
+
+      </div>
+
+    </div>
+
 
 </template>
 
@@ -25,7 +45,9 @@ export default {
   data() {
     return {
       courses: [],
-      tasks: []
+      tasks: [],
+      courseIsHidden: false,
+      taskIsHidden: false,
     }
   },
   methods: {
@@ -84,6 +106,12 @@ export default {
 
       console.log("Course " + id + " deleted")
     },
+
+    editTask(id, updatedTask) {
+      this.courses.tasks = this.courses.tasks.map (task => task.id === id ? updatedTask : task)
+    },
+
+
   },
   mounted() {
     this.fetchData();
@@ -98,17 +126,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 #table {
-  margin-top: -864px;
-  margin-right: 500px;
-  float: right;
+
 }
 
 div {
-  margin: 50px;
+  margin: 25px;
+}
+
+#form {
+  border: 3px solid green;
+  width: 1000px;
+  height: 750px;
+}
+
+#app {
+  display: flex;
+}
+
+#course-form, #task-form {
+  height: 500px;
+  margin: auto;
+  padding: 10px;
+}
+
+button {
+  margin: 5px;
 }
 
 
