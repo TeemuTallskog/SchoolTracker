@@ -42,7 +42,7 @@
             </p>
 
             <p v-else>
-              <button href="javascript:;" @click="deleteTask(course, task)">Delete</button>
+              <button href="javascript:;" @click="$emit('delete:task', task.id)">Delete</button>
               <button @click="editMode(task)">Edit</button>
             </p>
           <br>
@@ -74,13 +74,6 @@ export default {
       window.location.href=course.link;
     },
 
-    deleteTask(course, task) {
-      let i = course.tasks.indexOf(task)
-      course.tasks.splice(i, 1);
-
-      console.log("Task " + i + " deleted")
-    },
-
     editMode(task) {
       this.cachedTask = Object.assign({}, task)
       this.editing = task.id
@@ -88,13 +81,20 @@ export default {
 
     cancelEdit(task) {
       Object.assign(task, this.cachedTask)
+      console.log(task)
       this.editing = null
     },
 
     editTask(task) {
-      if (task.name === '' || task.date === '' || task.info === '' || task.link === '')
-        return this.$emit('edit:task', task.id, task)
+
+      console.log(task);
       this.editing = null;
+      if (task.name != '' && task.date != '' && task.id != '' && task.courseID != '') {
+        return this.$emit('edit:task', task.id, task)
+      }else{
+        alert("Missing values!");
+        this.cancelEdit(task);
+      }
     }
 
 

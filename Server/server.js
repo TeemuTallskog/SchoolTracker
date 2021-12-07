@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 
 const con = mysql.createConnection({
     host:'localhost',
-    user:'root',
-    password:'salis',
-    database:'koulusovellus'
+    user:'olso',
+    password:'olso',
+    database:'schooltrackertest'
 });
 
 const query = util.promisify(con.query).bind(con);
@@ -90,7 +90,7 @@ app.post('/update/task', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
         const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ? WHERE id = ?";
-        query(sql, [obj.Name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
+        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
             if (err) throw err;
             console.log(result);
         });
