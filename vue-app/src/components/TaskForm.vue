@@ -19,7 +19,7 @@
 
       <br>
 
-      <textarea id="info" rows="10" cols="56" v-model="task.info" type="text" placeholder="Lisätietoja tehtävästä"></textarea>
+      <textarea id="info" rows="10" cols="71" v-model="task.info" type="text" placeholder="Lisätietoja tehtävästä"></textarea>
 
       <br>
 
@@ -55,13 +55,13 @@ export default {
 
 div {
   padding: 10px;
-  border: 1px solid;
   width: 700px;
 }
 
 input {
-  width: 200px;
-  margin: 10px;
+  width: 250px;
+  height: 20px;
+  margin: 15px;
 }
 
 

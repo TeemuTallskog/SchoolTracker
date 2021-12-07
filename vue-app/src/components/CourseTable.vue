@@ -1,15 +1,15 @@
 <template>
- <div id="course-table">
-   <h1>Tehtävät</h1>
+  <div id="course-table">
+
    <!-- <ul v-for="course in courses" :key="course.id" v-on:click="redirectTo(course)"> -->
 
-   <ul v-for="course in courses" :key="course.id">
-     <li>
-       <p>{{ course.id }}</p>
+   <div v-for="course in courses" :key="course.id">
+
+     <article>
        <h2>{{ course.name }}</h2>
 
        <div id ="task-div">
-        <ul v-for="task in course.tasks" :key="task.id">
+        <article v-for="task in course.tasks" :key="task.id">
 
             <h3 v-if="editing === task.id">
             Nimi: <input type="text" v-model="task.name"/>
@@ -46,12 +46,12 @@
               <button @click="editMode(task)">Edit</button>
             </p>
           <br>
-        </ul>
+        </article>
 
        </div>
        <button @click="$emit('delete:course', course.id)">Delete course</button>
-     </li>
-   </ul>
+     </article>
+   </div>
 
  </div>
 </template>
@@ -105,17 +105,23 @@ export default {
 <style scoped>
 
 #task-div {
-  border: 1px solid red;
 }
 
 #course-table {
-  border: 1px solid;
-  width: 500px
+  margin-top: 0px;
+  border: 3px solid green;
+  width: 600px;
+  height: 750px;
+  overflow-y: auto;
 }
 
 li {
   margin: 5px;
   padding: 5px;
+}
+
+ul {
+  list-style: none;
 }
 
 </style>
