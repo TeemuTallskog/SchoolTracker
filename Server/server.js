@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { check, validationResult } = require('express-validator');
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 const cors = require('cors');
+const e = require("express");
 
 app.use(cors());
 app.use(express.static('public'));
@@ -29,10 +30,15 @@ app.delete('/delete/course', function (req, res){
         const id = req.query.id;
         console.log(id);
         const sql = "DELETE FROM courses WHERE id = ?";
+        const taskSQL = "DELETE FROM tasks WHERE courseID = ?";
         query(sql,[id], function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             console.log(result);
         });
+        query(taskSQL, [id], function (err, result){
+            if(err) console.log(err);
+            console.log(result);
+        })
         res.send("Success");
     }
     catch(err){
