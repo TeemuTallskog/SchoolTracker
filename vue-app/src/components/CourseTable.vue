@@ -19,12 +19,16 @@
             <p v-if="editing === task.id">
             Päivämäärä: <input type="date" v-model="task.date"/>
             </p>
-            <p v-else>{{task.date}}</p>
+            <p v-else>{{formatDate(task)}}</p>
 
             <p v-if="editing === task.id">
             Lisätiedot: <input type="text" v-model="task.info"/>
             </p>
             <p v-else>{{task.info}}</p>
+
+            <img v-if="task.done == 1" src="@/assets/Done.png" width="40" height="40">
+            <img v-else-if="task.done == 0 && pastDate(task)" src="@/assets/New.png" width="40" height="40">
+            <img v-else src="@/assets/Failed.png" width="40" height="40">
 
             <!--
 
@@ -42,6 +46,8 @@
             </p>
 
             <p v-else>
+              <button v-if="task.done == 0" @click="$emit('done:task', task.id , 1)">Mark as done</button>
+              <button v-if="task.done == 1" @click="$emit('done:task', task.id , 0)">Mark as in progress</button>
               <button href="javascript:;" @click="$emit('delete:task', task.id)">Delete</button>
               <button @click="editMode(task)">Edit</button>
             </p>
@@ -67,9 +73,27 @@ export default {
   data() {
     return {
       editing: null,
+      failIMG: "@/assets/Failed.png",
+      doneIMG: "@/assets/Done.png",
+      newIMG: "@/assets/New.png"
     }
   },
   methods: {
+    formatDate(task){
+      const s = task.date.substring(0, task.date.indexOf("T"));
+      return s;
+    },
+    pastDate(task){
+      const today = new Date();
+      const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      const current = new Date(date);
+      const set = new Date(task.date);
+      if(set > current){
+        return true;
+      }else{
+        return false;
+      }
+    },
     redirectTo: function (course){
       window.location.href=course.link;
     },

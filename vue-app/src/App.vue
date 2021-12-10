@@ -20,6 +20,7 @@
     <div id="table">
       <course-table
           :courses="courses"
+          @done:task="updateProgress"
           @delete:course="deleteCourse"
           @edit:task="editTask"
           @delete:task="deleteTask"/>
@@ -59,6 +60,16 @@ export default {
         this.courses = data;
       } catch (err) {
         console.error("Error " + err);
+      }
+    },
+    async updateProgress(id, bool){
+      try{
+        await fetch('http://127.0.0.1:8081/update/task/progress?id=' + id + "&done=" + bool, {
+          method: 'POST',
+        })
+        await this.fetchData();
+      }catch(err){
+        console.log(err);
       }
     },
     async deleteTask(id){
