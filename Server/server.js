@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { check, validationResult } = require('express-validator');
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 const cors = require('cors');
+const e = require("express");
 
 app.use(cors());
 app.use(express.static('public'));
@@ -21,6 +22,27 @@ const con = mysql.createConnection({
 const query = util.promisify(con.query).bind(con);
 
 
+
+/**
+ * Used to update task progress /update/task/inprogress?id=X&done=0/1, 0 = in progress, 1 = done
+ */
+app.post('/update/task/progress', urlencodedParser, function (req, res){
+    try {
+        const id = req.query.id;
+        const bool = req.query.done;
+        const sql = "UPDATE tasks SET done = ? WHERE id = ?";
+        query(sql, [bool, id], function (err, result) {
+            if (err) console.log(err);
+            console.log(result);
+        });
+        res.send("Success");
+    }
+    catch(err){
+        console.log("Error " + err);
+        res.send("Database error");
+    }
+});
+
 /**
  * Used to delete a course from the database by adding a parameter /delete/course?id=X
  */
@@ -29,14 +51,19 @@ app.delete('/delete/course', function (req, res){
         const id = req.query.id;
         console.log(id);
         const sql = "DELETE FROM courses WHERE id = ?";
+        const taskSQL = "DELETE FROM tasks WHERE courseID = ?";
         query(sql,[id], function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             console.log(result);
         });
+        query(taskSQL, [id], function (err, result){
+            if(err) console.log(err);
+            console.log(result);
+        })
         res.send("Success");
     }
     catch(err){
-        if(err) throw err;
+        if(err) console.log(err);
         console.log(err);
         res.send("Error");
     }
@@ -51,13 +78,13 @@ app.delete('/delete/task', function (req, res){
         console.log(id);
         const sql = "DELETE FROM tasks WHERE id = ?";
         query(sql,[id], function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             console.log(result);
         });
         res.send("Success");
     }
     catch(err){
-        if(err) throw err;
+        if(err) console.log(err);
         console.log(err);
         res.send("Error");
     }
@@ -71,7 +98,7 @@ app.post('/update/course', urlencodedParser, function (req, res){
         const obj = req.body;
         const sql = "UPDATE courses SET name = ?, link = ? WHERE id = ?";
         query(sql, [obj.Name, obj.link, obj.id], function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             console.log(result);
         });
         res.send("Success");
@@ -89,9 +116,9 @@ app.post('/update/course', urlencodedParser, function (req, res){
 app.post('/update/task', urlencodedParser, function (req, res){
     try {
         const obj = req.body;
-        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ? WHERE id = ?";
-        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
-            if (err) throw err;
+        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ?, done = ? WHERE id = ?";
+        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id, obj.done], function (err, result) {
+            if (err) console.log(err);
             console.log(result);
         });
         res.send("Success");
@@ -134,7 +161,7 @@ app.post('/course', urlencodedParser,[check('name').isLength({min:2}).withMessag
         const obj = req.body;
         const sql = "INSERT INTO courses (name, link) VALUE (?, ?)"
         query(sql, [obj.name, obj.link], function (err, result){
-            if(err) throw err;
+            if(err) console.log(err);
             console.log(result);
        });
         res.send('Success');
@@ -157,9 +184,9 @@ app.post('/task', urlencodedParser, [check('name').isLength({min:2}).withMessage
     }
     try {
         const obj = request.body;
-        const sql = "INSERT INTO tasks (name, info, date, courseID) VALUES (? ,? ,?, ?)"
-        query(sql,[obj.name, obj.info, obj.date, obj.courseID], function (err, result){
-            if(err) throw err;
+        const sql = "INSERT INTO tasks (name, info, date, courseID, done) VALUES (? ,? ,?, ? ,?)"
+        query(sql,[obj.name, obj.info, obj.date, obj.courseID, 0], function (err, result){
+            if(err) console.log(err);
             console.log(result);
         });
         res.send("Success");
