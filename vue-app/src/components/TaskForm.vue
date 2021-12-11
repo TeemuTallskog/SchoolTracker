@@ -6,7 +6,7 @@
       <label for="name"></label>
       <input id="name" v-model="task.name" type="text" placeholder="Tehtävän nimi">
 
-      <label for="course">Valitse kurssi: </label>
+      <label id ="course-label" for="course">Valitse kurssi: </label>
       <select v-model="task.courseID" id="course">
         <option v-for="course in courses" :key="course.id" :value="course.id">{{course.name}}</option>
       </select>
@@ -69,7 +69,14 @@ input {
   margin: 15px;
 }
 
+select {
+  width: 100px;
+  margin-right: 35px;
 
+}
 
+#course-label {
+  margin-left: 52px;
+}
 
 </style>
