@@ -1,18 +1,21 @@
 <template>
-
-
   <div id="app">
+
+    <h1 id="header">SchoolTracker</h1>
+
+    <div id="container">
     <div id="form">
 
-      <button v-on:click="courseIsHidden = !courseIsHidden">Kurssi</button>
-      <button v-on:click="taskIsHidden = !taskIsHidden">Tehtävä</button>
+      <button v-on:click="showCourses">Kurssi</button>
+      <button v-on:click="showTasks">Tehtävä</button>
 
       <div v-if="!courseIsHidden && taskIsHidden" id="course-form">
     <course-form @add:course="addCourse"/>
     </div>
 
-      <div v-if="!taskIsHidden" id="task-form">
+      <div v-if="!taskIsHidden && courseIsHidden" id="task-form">
     <task-form @add:task="addTask" :courses="courses"/>
+
 
     </div>
   </div>
@@ -26,6 +29,8 @@
           @delete:task="deleteTask"/>
 
       </div>
+
+    </div>
 
     </div>
 
@@ -48,7 +53,7 @@ export default {
     return {
       courses: [],
       tasks: [],
-      courseIsHidden: false,
+      courseIsHidden: true,
       taskIsHidden: false,
     }
   },
@@ -137,7 +142,22 @@ export default {
     },
 
 
+    showCourses: function() {
+      if (this.courseIsHidden === true) {
+        this.courseIsHidden = false;
+        this.taskIsHidden = true;
+      }
+    },
+
+    showTasks: function() {
+      if (this.taskIsHidden === true) {
+        this.taskIsHidden = false;
+        this.courseIsHidden = true;
+      }
+    },
+
   },
+
   mounted() {
     this.fetchData();
   }
@@ -153,8 +173,10 @@ body {
   color: #2c3e50;
 }
 
-#table {
-
+#header {
+  font-size: 2.5em;
+  text-align: left;
+  margin-left: 50px;
 }
 
 div {
@@ -167,7 +189,7 @@ div {
   height: 750px;
 }
 
-#app {
+#container {
   display: flex;
 }
 
@@ -179,7 +201,19 @@ div {
 
 button {
   margin: 5px;
+  background-color: green;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  transition-duration: 0.1s;
+  cursor: pointer;
+  padding: 7px;
 }
 
+button:hover {
+  background-color: #4CAF50;
+  color: white;
+}
 
 </style>

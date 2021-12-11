@@ -41,21 +41,21 @@
             </p>
 
             <p v-if="editing === task.id">
-              <button @click="editTask(task)">Save</button>
-              <button class="muted-button" @click="cancelEdit(task)">Cancel</button>
+              <button @click="editTask(task)">Tallenna</button>
+              <button class="muted-button" @click="cancelEdit(task)">Peruuta</button>
             </p>
 
             <p v-else>
               <button v-if="task.done == 0" @click="$emit('done:task', task.id , 1)">Mark as done</button>
               <button v-if="task.done == 1" @click="$emit('done:task', task.id , 0)">Mark as in progress</button>
-              <button href="javascript:;" @click="$emit('delete:task', task.id)">Delete</button>
-              <button @click="editMode(task)">Edit</button>
+              <button href="javascript:;" @click="$emit('delete:task', task.id)">Poista</button>
+              <button @click="editMode(task)">Muokkaa</button>
             </p>
           <br>
         </article>
 
        </div>
-       <button @click="$emit('delete:course', course.id)">Delete course</button>
+       <button @click="$emit('delete:course', course.id)">Poista kurssi</button>
      </article>
    </div>
 
@@ -127,9 +127,6 @@ export default {
 </script>
 
 <style scoped>
-
-#task-div {
-}
 
 #course-table {
   margin-top: 0px;

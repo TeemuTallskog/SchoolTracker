@@ -1,7 +1,7 @@
 <template>
 <div id="course-form">
   <form @submit.prevent="handleSubmit">
-    <h1>Uusi Kurssi</h1>
+    <h1>Uusi kurssi</h1>
 
     <label for="name"></label>
     <input id="name" v-model="course.name" type="text" placeholder="Kurssin nimi">
@@ -54,8 +54,5 @@ input {
   height: 20px;
   margin: 15px;
 }
-
-
-
 
 </style>

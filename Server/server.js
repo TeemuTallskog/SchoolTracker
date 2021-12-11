@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 
 const con = mysql.createConnection({
     host:'localhost',
-    user:'olso',
-    password:'olso',
-    database:'schooltrackertest'
+    user:'root',
+    password:'salis',
+    database:'koulusovellus'
 });
 
 const query = util.promisify(con.query).bind(con);
