@@ -3,13 +3,18 @@
 
    <!-- <ul v-for="course in courses" :key="course.id" v-on:click="redirectTo(course)"> -->
 
-   <div v-for="course in courses" :key="course.id">
+   <div v-for="course in courses" :key="course.id" id="course-object">
 
      <article>
-       <h2>{{ course.name }}</h2>
+       <div id="course-name">
+       <h2 id="course-header">{{ course.name }}</h2>
+         <p>{{doneTasks(course)}}/{{course.tasks.length}}</p>
+       <button class="listVis" v-if="!isHidden(course.id)" @click="hide(course.id)"><img src="@/assets/expanded.png" height="30" width="30">
+       </button><button class="listVis" v-else @click="hide(course.id)"><img src="@/assets/contracted.png" height="30" width="30"></button>
+       </div>
 
-       <div id ="task-div">
-        <article v-for="task in course.tasks" :key="task.id">
+       <div id ="task-div" v-if="!isHidden(course.id)">
+        <article id="task-article" v-for="task in course.tasks" :key="task.id">
 
             <h3 v-if="editing === task.id">
             Nimi: <input type="text" v-model="task.name"/>
@@ -26,9 +31,9 @@
             </p>
             <p v-else>{{task.info}}</p>
 
-            <img v-if="task.done == 1" src="@/assets/Done.png" width="40" height="40">
-            <img v-else-if="task.done == 0 && pastDate(task)" src="@/assets/New.png" width="40" height="40">
-            <img v-else src="@/assets/Failed.png" width="40" height="40">
+            <img v-if="task.done == 1 && editing==null" src="@/assets/Done.png" width="40" height="40">
+            <img v-else-if="task.done == 0 && pastDate(task) && editing==null" src="@/assets/New.png" width="40" height="40">
+            <img v-else-if="editing==null" src="@/assets/Failed.png" width="40" height="40">
 
             <!--
 
@@ -73,12 +78,28 @@ export default {
   data() {
     return {
       editing: null,
-      failIMG: "@/assets/Failed.png",
-      doneIMG: "@/assets/Done.png",
-      newIMG: "@/assets/New.png"
+      hiddenArr: []
     }
   },
   methods: {
+    doneTasks(course){
+      let n = 0;
+      for(let i = 0; i < course.tasks.length; i++){
+        if(course.tasks[i].done == 1) n++;
+      }
+      return n;
+    },
+    hide(courseID){
+      if(!this.hiddenArr.includes(courseID)){
+        this.hiddenArr.push(courseID);
+      }else {
+        this.hiddenArr = this.hiddenArr.filter(item => item !== courseID);
+      }
+    },
+    isHidden(courseID){
+      if(this.hiddenArr.includes(courseID)) return true;
+      else return false;
+    },
     formatDate(task){
       const s = task.date.substring(0, task.date.indexOf("T"));
       return s;
@@ -128,11 +149,38 @@ export default {
 
 <style scoped>
 
+#course-object{
+  border: 3px solid green;
+  padding-bottom: 25px;
+}
+
+#task-article{
+  border-bottom: 1px solid green;
+}
+
+.listVis {
+  background: none;
+  margin: 0;
+  padding: 0;
+}
+
+#course-header{
+  margin: 0;
+  width: 25%;
+  height: 100%;
+  float: left;
+}
+
+#course-name{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #course-table {
   margin-top: 0px;
-  border: 3px solid green;
-  width: 600px;
-  height: 750px;
+  width: 900px;
+  height: auto;
   overflow-y: auto;
 }
 

@@ -2,13 +2,13 @@
   <div id="app">
 
     <h1 id="header">SchoolTracker</h1>
-
     <div id="container">
-    <div id="form">
-
-      <button v-on:click="showCourses">Kurssi</button>
-      <button v-on:click="showTasks">Tehtävä</button>
-
+      <div id="button-container">
+      <button v-on:click="showCourses(); showForm();">Uusi kurssi</button>
+      <button v-on:click="showTasks(); showForm();">Uusi tehtävä</button>
+      </div>
+      <div id="form-course-table">
+      <div id="form" v-if="!this.formIsHidden">
       <div v-if="!courseIsHidden && taskIsHidden" id="course-form">
     <course-form @add:course="addCourse"/>
     </div>
@@ -16,8 +16,8 @@
       <div v-if="!taskIsHidden && courseIsHidden" id="task-form">
     <task-form @add:task="addTask" :courses="courses"/>
 
-
     </div>
+        <button @click="hideForm">Peruuta</button>
   </div>
 
     <div id="table">
@@ -31,7 +31,7 @@
       </div>
 
     </div>
-
+    </div>
     </div>
 
 
@@ -55,6 +55,7 @@ export default {
       tasks: [],
       courseIsHidden: true,
       taskIsHidden: false,
+      formIsHidden: true,
     }
   },
   methods: {
@@ -96,8 +97,10 @@ export default {
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         })
         await this.fetchData();
+        this.hideForm();
       }catch(err){
         console.log(err);
+        this.hideForm();
       }
     },
 
@@ -110,8 +113,10 @@ export default {
           headers: {'Content-type': 'application/json; charset=UTF-8'},
         })
         await this.fetchData();
+        this.hideForm();
       }catch(err){
         console.log(err);
+        this.hideForm();
       }
     },
 
@@ -155,6 +160,12 @@ export default {
         this.courseIsHidden = true;
       }
     },
+    showForm: function (){
+      this.formIsHidden = false;
+    },
+    hideForm: function (){
+      this.formIsHidden = true;
+    }
 
   },
 
@@ -173,6 +184,30 @@ body {
   color: #2c3e50;
 }
 
+#form-course-table{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#table{
+  margin: auto;
+}
+
+#button-container{
+  margin-top: 50px;
+}
+
+#button-container button{
+  background-color: #008DDF;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+#button-container button:hover{
+  background-color: #3D4756;
+}
+
 #header {
   font-size: 2.5em;
   text-align: left;
@@ -185,16 +220,19 @@ div {
 
 #form {
   border: 3px solid green;
-  width: 1000px;
-  height: 750px;
+  width: 900px;
+  height: auto;
+  padding-bottom: 25px;
 }
 
 #container {
   display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
 }
 
 #course-form, #task-form {
-  height: 500px;
+  height: auto;
   margin: auto;
   padding: 10px;
 }
