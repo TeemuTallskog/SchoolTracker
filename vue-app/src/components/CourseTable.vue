@@ -8,7 +8,8 @@
      <article>
        <div id="course-name">
        <h2 id="course-header">{{ course.name }}</h2>
-         <p>{{doneTasks(course)}}/{{course.tasks.length}}</p>
+
+
        <button class="listVis" v-if="!isHidden(course.id)" @click="hide(course.id)"><img src="@/assets/expanded.png" height="30" width="30">
        </button><button class="listVis" v-else @click="hide(course.id)"><img src="@/assets/contracted.png" height="30" width="30"></button>
        </div>
@@ -17,7 +18,7 @@
         <article id="task-article" v-for="task in course.tasks" :key="task.id">
 
             <h3 v-if="editing === task.id">
-            Nimi: <input type="text" v-model="task.name"/>
+            Nimi: <input type="text" v-model="task.name" maxlength="50"/>
             </h3>
             <h3 v-else>{{task.name}}</h3>
 
@@ -27,7 +28,7 @@
             <p v-else>{{formatDate(task)}}</p>
 
             <p v-if="editing === task.id">
-            Lisätiedot: <input type="text" v-model="task.info"/>
+            Lisätiedot: <input type="text" v-model="task.info" maxlength="255"/>
             </p>
             <p v-else>{{task.info}}</p>
 
@@ -51,8 +52,8 @@
             </p>
 
             <p v-else>
-              <button v-if="task.done == 0" @click="$emit('done:task', task.id , 1)">Mark as done</button>
-              <button v-if="task.done == 1" @click="$emit('done:task', task.id , 0)">Mark as in progress</button>
+              <button v-if="task.done == 0" @click="$emit('done:task', task.id , 1)">Valmis</button>
+              <button v-if="task.done == 1" @click="$emit('done:task', task.id , 0)">Ei valmis</button>
               <button href="javascript:;" @click="$emit('delete:task', task.id)">Poista</button>
               <button @click="editMode(task)">Muokkaa</button>
             </p>
@@ -60,7 +61,9 @@
         </article>
 
        </div>
+       <p> {{doneTasks(course)}}/{{course.tasks.length}}</p>
        <button @click="$emit('delete:course', course.id)">Poista kurssi</button>
+
      </article>
    </div>
 
@@ -149,13 +152,24 @@ export default {
 
 <style scoped>
 
+#task-div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #course-object{
-  border: 3px solid green;
+  border: 3px solid #006989ff;
   padding-bottom: 25px;
+  border-radius: 10px;
+  background-color: whitesmoke;
 }
 
 #task-article{
-  border-bottom: 1px solid green;
+  border: 2px solid #006989ff;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  margin: 15px;
+  width: 363px;
 }
 
 .listVis {
@@ -164,11 +178,8 @@ export default {
   padding: 0;
 }
 
-#course-header{
-  margin: 0;
-  width: 25%;
-  height: 100%;
-  float: left;
+#course-header h2 {
+  color: red;
 }
 
 #course-name{

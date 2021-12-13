@@ -199,13 +199,14 @@ body {
 }
 
 #button-container button{
-  background-color: #008DDF;
+  background-color: #006989ff;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 1.5em;
 }
 
 #button-container button:hover{
-  background-color: #3D4756;
+  background-color: #4CAF50;
+  color: white;
 }
 
 #header {
@@ -219,10 +220,12 @@ div {
 }
 
 #form {
-  border: 3px solid green;
+  background-color: whitesmoke;
+  border: 3px solid #006989ff;
   width: 900px;
   height: auto;
   padding-bottom: 25px;
+  border-radius: 10px;
 }
 
 #container {
@@ -239,7 +242,7 @@ div {
 
 button {
   margin: 5px;
-  background-color: green;
+  background-color: #006989ff;
   border: none;
   color: white;
   text-align: center;
@@ -247,6 +250,7 @@ button {
   transition-duration: 0.1s;
   cursor: pointer;
   padding: 7px;
+  border-radius: 5px;
 }
 
 button:hover {
