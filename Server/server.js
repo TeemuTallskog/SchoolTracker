@@ -23,7 +23,30 @@ const query = util.promisify(con.query).bind(con);
 
 
 /**
- * Used to update task progress /update/task/inprogress?id=X&done=0/1, 0 = in progress, 1 = done
+ * this request is used to empty all data form the database.
+ */
+app.delete('/delete/all', function (req, res){
+    try{
+        const courseSql = "TRUNCATE TABLE courses";
+        const taskSql = "TRUNCATE TABLE tasks";
+        query(courseSql, function (err, result) {
+            if (err) console.log(err);
+            console.log(result);
+        });
+        query(taskSql, function (err, result) {
+            if (err) console.log(err);
+            console.log(result);
+        });
+        res.status(200).send("Success");
+
+    }catch(err){
+        console.log(err);
+        res.status(500).send("Error");
+    }
+})
+
+/**
+ * Used to update task progress /update/task/progress?id=X&done=0/1, 0 = in progress, 1 = done
  */
 app.post('/update/task/progress', urlencodedParser, function (req, res) {
     try {
@@ -89,11 +112,18 @@ app.delete('/delete/task', function (req, res) {
 /**
  * Used to update a course by adding the modified course object to the body of the request
  */
-app.post('/update/course', urlencodedParser, function (req, res) {
+app.post('/update/course', urlencodedParser,[check('Name').isLength({min: 2, max: 255}).withMessage('Must be between 2 and 255 characters'),
+    check('id').isInt().withMessage('Must be a valid integer'),
+    check('link').isLength({max: 255}).withMessage('Link must be under 255 characters')],
+    function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({errors: errors.array()});
+        }
     try {
         const obj = req.body;
         const sql = "UPDATE courses SET name = ?, link = ? WHERE id = ?";
-        query(sql, [obj.Name, obj.link, obj.id], function (err, result) {
+        query(sql, [obj.name, obj.link, obj.id], function (err, result) {
             if (err) console.log(err);
             console.log(result);
         });
@@ -108,11 +138,20 @@ app.post('/update/course', urlencodedParser, function (req, res) {
 /**
  * Used to update a task by adding the modified task to the body of the request
  */
-app.post('/update/task', urlencodedParser, function (req, res) {
+app.post('/update/task', urlencodedParser, [
+        check('name').isLength({min: 2, max: 255}).withMessage("Minimum name lenght = 2"),
+        check('date').isDate().withMessage('Must be a valid date'),
+        check('info').isLength({max: 255}).withMessage('Must be less than 255 characters'),
+        check('courseID').isInt().withMessage('must be a valid integer')],
+    function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
     try {
         const obj = req.body;
-        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ?, done = ? WHERE id = ?";
-        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id, obj.done], function (err, result) {
+        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ? WHERE id = ?";
+        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
             if (err) console.log(err);
             console.log(result);
         });
@@ -150,7 +189,9 @@ app.get('/list', async function (req, res) {
 /**
  * Used to add a new course to the database by adding the course object to the body of the request
  */
-app.post('/course', urlencodedParser, [check('name').isLength({min: 2}).withMessage("Minimum name lenght = 2")], function (req, res) {
+app.post('/course', urlencodedParser, [check('name').isLength({min: 2, max: 255}).withMessage("Minimum name lenght = 2"),
+    check('link').isLength({max: 255}).withMessage('Must be under 255 characters')],
+    function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({errors: errors.array()});
@@ -172,8 +213,10 @@ app.post('/course', urlencodedParser, [check('name').isLength({min: 2}).withMess
 /**
  * Used to add a task to the database by adding the task object to the body of the request
  */
-app.post('/task', urlencodedParser, [check('name').isLength({min: 2}).withMessage("Minimum name lenght = 2"),
-        check('date').isDate().withMessage("Must have a date"), check('courseID').isInt().withMessage("Must contain course ID")],
+app.post('/task', urlencodedParser, [check('name').isLength({min: 2, max: 255}).withMessage("Must be between 2 and 255 characters"),
+        check('date').isDate().withMessage("Must have a date"), check('courseID').isInt().withMessage("Must contain course ID"),
+    check('info').isLength({max: 255}).withMessage('Must be under 255 characters'),
+    check('courseID').isInt().withMessage('Must be a valid integer')],
     function (request, res) {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {
@@ -183,7 +226,7 @@ app.post('/task', urlencodedParser, [check('name').isLength({min: 2}).withMessag
             const obj = request.body;
             const sql = "INSERT INTO tasks (name, info, date, courseID, done) VALUES (? ,? ,?, ? ,?)"
             query(sql, [obj.name, obj.info, obj.date, obj.courseID, 0], function (err, result) {
-                if (err) console.log(err);
+                if (err) console.log("Database error" + err);
                 console.log(result);
             });
             res.send("Success");
@@ -202,5 +245,5 @@ const server = app.listen(8081, function () {
     const host = server.address().address
     const port = server.address().port
 
-    console.log("Example app listening at http://%s:%s", host, port);
+    console.log("App listening at http://%s:%s", host, port);
 })
