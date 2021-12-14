@@ -1,7 +1,7 @@
 const course = {id: 1, name: "Lorem ipsum", link: "ww.google.com"};
 const secondCourse = {id: 2, name: "second course", link: "ww.google.com"};
-const secondTask = {id: 2, name: "second task", info: "Test text", date: "2021-12-22", courseID: 1, done: 0};
-const task = {id: 1, name: "Test task", info: "Test text", date: "2021-12-22", courseID: 1, done: 0};
+const secondTask = {id: 2, name: "second task", info: "Test text", date: "2021-12-22", courseID: 1, done: 0, link: ""};
+const task = {id: 1, name: "Test task", info: "Test text", date: "2021-12-22", courseID: 1, done: 0, link : ""};
 
 async function fetchData() {
     try {
@@ -158,7 +158,7 @@ describe('Server module', function () {
         expect(data[1].name).toBe("second course");
     })
     it('should be able to modify a task', async function () {
-        const modified = {id: 1, name: "modified task", info: "modified info", date: "2020-11-23", courseID: 1};
+        const modified = {id: 1, name: "modified task", info: "modified info", date: "2020-11-23", courseID: 1, link: "", courseID: 1, done: 0,};
         expect(await editTask(modified)).toBe(true);
         const data = await fetchData();
         expect(data[0].tasks[0].name).toBe("modified task");
@@ -184,10 +184,10 @@ describe('Server module', function () {
         expect(data[0].tasks[0].done).toBe(0);
     })
     describe('Incorrect data input', function (){
-       it('should not accept data over 255 characters', async function (){
+       it('should not accept data over 255/900 characters', async function (){
            const falseTask = {name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras augue purus, fermentum sit amet velit nec, tincidunt euismod velit. Sed dictum, dui eget maximus tempor, enim felis rhoncus erat, in vestibulum purus arcu non nulla. Etiam in nibh id tellus non.",
-               info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras augue purus, fermentum sit amet velit nec, tincidunt euismod velit. Sed dictum, dui eget maximus tempor, enim felis rhoncus erat, in vestibulum purus arcu non nulla. Etiam in nibh id tellus non.",
-               date: "2021-12-22", courseID: 1};
+               info: "" ,
+               date: "2021-12-22", courseID: 1, link: ""};
            const falseCourse = {id: 2, name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras augue purus, fermentum sit amet velit nec, tincidunt euismod velit. Sed dictum, dui eget maximus tempor, enim felis rhoncus erat, in vestibulum purus arcu non nulla. Etiam in nibh id tellus non.",
                link: "ww.google.com"}
            expect(await addTask(falseTask)).toBe(false);
@@ -195,15 +195,15 @@ describe('Server module', function () {
            expect(await editTask(falseTask)).toBe(false);
        });
        it('should not accept a name under 2 characters', async function (){
-           const falseTask = {name: "A", info: "Test text", date: "2021-12-22", courseID: 1};
+           const falseTask = {name: "A", info: "Test text", date: "2021-12-22", courseID: 1, link: ""};
            const falseCourse = {name: "B", link: "ww.google.com"};
            expect(await addCourse(falseCourse)).toBe(false);
            expect(await addTask(falseTask)).toBe(false);
            expect(await editTask(falseTask)).toBe(false);
        });
-       it('should only accpet a valid date', async function (){
-          const falseTask =  {name: "A", info: "Test text", date: "this is not a date", courseID: 1};
-          const falseTask2 = {name: "A", info: "Test text", date: "2021-99-99", courseID: 1};
+       it('should only accept a valid date', async function (){
+          const falseTask =  {name: "A", info: "Test text", date: "this is not a date", courseID: 1, link: ""};
+          const falseTask2 = {name: "A", info: "Test text", date: "2021-99-99", courseID: 1, link: ""};
           expect(await addTask(falseTask)).toBe(false);
           expect(await addTask(falseTask2)).toBe(false);
           expect(await editTask(falseTask)).toBe(false);

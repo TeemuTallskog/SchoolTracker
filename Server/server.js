@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 
 const con = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'salis',
-    database: 'koulusovellus'
+    user: 'olso',
+    password: 'olso',
+    database: 'schooltracker'
 });
 
 const query = util.promisify(con.query).bind(con);
@@ -141,8 +141,9 @@ app.post('/update/course', urlencodedParser,[check('Name').isLength({min: 2, max
 app.post('/update/task', urlencodedParser, [
         check('name').isLength({min: 2, max: 255}).withMessage("Minimum name lenght = 2"),
         check('date').isDate().withMessage('Must be a valid date'),
-        check('info').isLength({max: 255}).withMessage('Must be less than 255 characters'),
-        check('courseID').isInt().withMessage('must be a valid integer')],
+        check('info').isLength({max: 900}).withMessage('Must be less than 900 characters'),
+        check('courseID').isInt().withMessage('must be a valid integer'),
+        check('link').isLength({max:255})],
     function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -150,8 +151,8 @@ app.post('/update/task', urlencodedParser, [
     }
     try {
         const obj = req.body;
-        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ? WHERE id = ?";
-        query(sql, [obj.name, obj.info, obj.date, obj.courseID, obj.id], function (err, result) {
+        const sql = "UPDATE tasks SET name = ?, info = ?, date = ?, courseID = ?, link = ? WHERE id = ?";
+        query(sql, [obj.name, obj.info, obj.date, obj.courseID,obj.link, obj.id], function (err, result) {
             if (err) console.log(err);
             console.log(result);
         });
@@ -215,8 +216,9 @@ app.post('/course', urlencodedParser, [check('name').isLength({min: 2, max: 255}
  */
 app.post('/task', urlencodedParser, [check('name').isLength({min: 2, max: 255}).withMessage("Must be between 2 and 255 characters"),
         check('date').isDate().withMessage("Must have a date"), check('courseID').isInt().withMessage("Must contain course ID"),
-    check('info').isLength({max: 255}).withMessage('Must be under 255 characters'),
-    check('courseID').isInt().withMessage('Must be a valid integer')],
+    check('info').isLength({max: 900}).withMessage('Must be under 255 characters'),
+    check('courseID').isInt().withMessage('Must be a valid integer'),
+    check('link').isLength({max: 255})],
     function (request, res) {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {
@@ -224,8 +226,8 @@ app.post('/task', urlencodedParser, [check('name').isLength({min: 2, max: 255}).
         }
         try {
             const obj = request.body;
-            const sql = "INSERT INTO tasks (name, info, date, courseID, done) VALUES (? ,? ,?, ? ,?)"
-            query(sql, [obj.name, obj.info, obj.date, obj.courseID, 0], function (err, result) {
+            const sql = "INSERT INTO tasks (name, info, date, courseID, done, link) VALUES (? ,? ,?, ? ,?, ?)"
+            query(sql, [obj.name, obj.info, obj.date, obj.courseID, 0, obj.link], function (err, result) {
                 if (err) console.log("Database error" + err);
                 console.log(result);
             });

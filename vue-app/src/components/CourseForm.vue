@@ -10,7 +10,7 @@
 
 
     <label for="link"></label>
-    <input id ="link" v-model="course.link" type="text" placeholder="Linkki">
+    <input id ="link" v-model="course.link" type="text" placeholder="Linkki" maxlength="255">
 
     <br>
 
