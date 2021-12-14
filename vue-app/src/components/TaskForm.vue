@@ -26,7 +26,7 @@
 
       <br>
 
-      <textarea id="info" rows="10" cols="71" v-model="task.info" type="text" placeholder="Lisätietoja tehtävästä" maxlength="255"></textarea>
+      <textarea id="info" rows="10" cols="71" v-model="task.info" type="text" placeholder="Lisätietoja tehtävästä" maxlength="900"></textarea>
 
       <br>
 
