@@ -20,7 +20,7 @@ http://127.0.0.1:8081/course // POST // Reads a course object from the body of t
 
 http://127.0.0.1:8081/update/task // POST // Reads a task object from the body of the request and updates the changes to an object with the same id
 
-http://127.0.0.1:8081/update/task // POST // Reads a course object from the body of the request and updates the changes to an object with the same id
+http://127.0.0.1:8081/update/course // POST // Reads a course object from the body of the request and updates the changes to an object with the same id
 
 http://127.0.0.1:8081/update/task/progress?id=X&done=0/1 // POST // Updates the progress of a task with the given id in the url </br>done 1 == true done 0 == false
 
