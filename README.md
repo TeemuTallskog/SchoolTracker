@@ -1,8 +1,10 @@
 # SchoolTracker
 
-Creating your database table:
+Creating your database tables:
 ---------------------
 CREATE TABLE courses (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, link VARCHAR(255));
+
+
 
 CREATE TABLE tasks (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, info TEXT, date DATE NOT NULL, done BOOLEAN NOT NULL, link VARCHAR(255));
 
