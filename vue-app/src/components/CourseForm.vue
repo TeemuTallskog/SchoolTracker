@@ -4,18 +4,21 @@
     <h1>Uusi kurssi</h1>
 
     <label for="name"></label>
-    <input id="name" v-model="course.name" type="text" placeholder="Kurssin nimi">
+    <input id="name" v-model="course.name" type="text" placeholder="Kurssin nimi" maxlength="50" required
+           oninvalid="this.setCustomValidity('Lisää kurssin nimi')"
+           oninput="this.setCustomValidity('')"/>
+
 
     <label for="link"></label>
     <input id ="link" v-model="course.link" type="text" placeholder="Linkki">
 
     <br>
 
-    <textarea id="taskInfo" rows="10" cols="71" v-model="course.info" type="text" placeholder="Lisätietoja kurssista"></textarea>
+    <textarea id="taskInfo" rows="10" cols="71" v-model="course.info" type="text" placeholder="Lisätietoja kurssista" maxlength="255"></textarea>
 
     <br>
 
-    <button>Luo Kurssi</button>
+    <button>Luo kurssi</button>
 
   </form>
 </div>
