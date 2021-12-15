@@ -9,8 +9,19 @@ CREATE TABLE courses (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(2
 ```
 CREATE TABLE tasks (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, info TEXT, date DATE NOT NULL, done BOOLEAN NOT NULL, link VARCHAR(255), courseID INT NOT NULL);
 ```
+----------------------
+Change your database info:
 -----------------------------------------------------------
-
+Server/server.js line -15
+```
+const con = mysql.createConnection({
+    host: 'localhost',
+    user: 'username',
+    password: 'password',
+    database: 'database'
+});
+```
+-----------------------------------------------------------
 REST api:
 ---------------------
 | End point | HTTP Method | Description |
@@ -24,6 +35,9 @@ REST api:
 | /delete/task?id=X | DELETE | Attempts to delete a task from the database with the gived id in the url |
 | /delete/course?id=X | DELETE | Attempts to delete a course from the database with the gived id in the url |
 | /delete/all | DELETE | Used to empty the database |
+
+-----------------------------------------------------------
+
 
 
 
