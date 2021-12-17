@@ -59,6 +59,11 @@ export default {
     }
   },
   methods: {
+
+    /**
+     * Asynchronous method for app.get(/list) from server.js file
+     * Returns all courses and tasks
+     */
     async fetchData() {
       try {
         const response = await fetch("http://127.0.0.1:8081/list");
@@ -68,6 +73,11 @@ export default {
         console.error("Error " + err);
       }
     },
+
+    /**
+     * Asynchronous method for app.get(/update/task/progress) from server.js file
+     * Updates task progress
+     */
     async updateProgress(id, bool){
       try{
         await fetch('http://127.0.0.1:8081/update/task/progress?id=' + id + "&done=" + bool, {
@@ -78,6 +88,11 @@ export default {
         console.log(err);
       }
     },
+
+    /**
+     * Asynchronous method for app.get(/delete/task) from server.js file
+     * Deletes task by id
+     */
     async deleteTask(id){
       try{
         await fetch('http://127.0.0.1:8081/delete/task?id=' + id, {
@@ -89,6 +104,11 @@ export default {
       }
       console.log("Task " + id + " deleted")
     },
+
+    /**
+     * Asynchronous method for app.get(/course) from server.js file
+     * Adds a new course
+     */
     async addCourse(course) {
       try{
         await fetch('http://127.0.0.1:8081/course', {
@@ -104,6 +124,10 @@ export default {
       }
     },
 
+    /**
+     * Asynchronous method for app.get(/task) from server.js file
+     * Adds a new task
+     */
     async addTask(task) {
       console.log(JSON.stringify(task));
       try{
@@ -120,6 +144,10 @@ export default {
       }
     },
 
+    /**
+     * Asynchronous method for app.get(/delete/course) from server.js file
+     * Deletes course by id
+     */
     async deleteCourse(id) {
       try{
         await fetch('http://127.0.0.1:8081/delete/course?id=' + id, {
@@ -132,6 +160,11 @@ export default {
       console.log("Course " + id + " deleted")
     },
 
+
+    /**
+     * Asynchronous method for app.get(/update/task) from server.js file
+     * Updates task
+     */
     async editTask(id, updatedTask) {
       console.log(updatedTask)
       try{
@@ -147,6 +180,9 @@ export default {
     },
 
 
+    /**
+     * Methods for changing the visibility of course/task forms
+     */
     showCourses: function() {
       if (this.courseIsHidden === true) {
         this.courseIsHidden = false;

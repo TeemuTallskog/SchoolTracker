@@ -1,8 +1,6 @@
 <template>
   <div id="course-table">
 
-    <!-- <ul v-for="course in courses" :key="course.id" v-on:click="redirectTo(course)"> -->
-
     <div v-for="course in courses" :key="course.id" id="course-object">
 
       <article>
@@ -42,12 +40,6 @@
                  height="40">
             <img v-else-if="editing==null" src="@/assets/Failed.png" width="40" height="40">
 
-            <!--
-
-            <p v-if="editing === task.id">
-              Kurssi: <input type="text" v-model="task.course"/>
-            </p>
-            -->
             <p v-if="editing === task.id">
               Linkki: <input type="text" v-model="task.link"/>
             </p>
@@ -91,6 +83,10 @@ export default {
     }
   },
   methods: {
+
+    /**
+     * Checks the validity of link given by user
+     */
     isValidHttpUrl(string) {
       let url;
 
@@ -101,6 +97,10 @@ export default {
       }
       return url.protocol === "http:" || url.protocol === "https:";
     },
+
+    /**
+     * Method for tracking in-progress values of tasks
+     */
     doneTasks(course) {
       let n = 0;
       for (let i = 0; i < course.tasks.length; i++) {
@@ -108,6 +108,10 @@ export default {
       }
       return n;
     },
+
+    /**
+     * If course is minimized with the pressing of arrow button, id of that course gets pushed to hiddenArray
+     */
     hide(courseID) {
       if (!this.hiddenArr.includes(courseID)) {
         this.hiddenArr.push(courseID);
@@ -115,14 +119,27 @@ export default {
         this.hiddenArr = this.hiddenArr.filter(item => item !== courseID);
       }
     },
+
+    /**
+     * Checks if hidden array includes id of course
+     */
     isHidden(courseID) {
       if (this.hiddenArr.includes(courseID)) return true;
       else return false;
     },
+
+    /**
+     * Formats date to a more readable state
+     */
     formatDate(task) {
       const s = task.date.substring(0, task.date.indexOf("T"));
       return s;
     },
+
+    /**
+     * Checks if date of task is earlier than current date
+     * If true, in-progress value of task can be seen as a red marker
+     */
     pastDate(task) {
       const today = new Date();
       const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -134,23 +151,35 @@ export default {
         return false;
       }
     },
+
     redirectTo: function (course) {
       window.location.href = course.link;
     },
 
+    /**
+     * Method for editing tasks
+     * Makes a cached version of task if user wants to cancel editing
+     */
     editMode(task) {
       this.cachedTask = Object.assign({}, task)
       this.editing = task.id
     },
 
+    /**
+     * Cancels task editing
+     * Returns cached version of task
+     */
     cancelEdit(task) {
       Object.assign(task, this.cachedTask)
       console.log(task)
       this.editing = null
     },
 
+    /**
+     * Method for editing tasks
+     * Alerts user if edited task has missing values
+     */
     editTask(task) {
-
       console.log(task);
       this.editing = null;
       if (task.name != '' && task.date != '' && task.id != '' && task.courseID != '') {
